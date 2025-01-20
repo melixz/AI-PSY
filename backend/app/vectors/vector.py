@@ -11,10 +11,11 @@ from .prompt import chat_prompt
 # Инициализация эмбеддингов
 embeddings = OpenAIEmbeddings(openai_api_key=settings.OPENAI_API_KEY)
 
-# Проверяем, существует ли база
+# Проверяем, существует ли база данных
 if not os.path.exists(settings.CHROMA_PERSIST_DIR):
     os.makedirs(settings.CHROMA_PERSIST_DIR)
 
+# Инициализируем векторное хранилище
 vectorstore = Chroma(
     collection_name="psychology_base",
     embedding_function=embeddings,
@@ -39,24 +40,34 @@ def load_documents(directory_path):
 documents_path = "backend/app/documents/psychology"
 try:
     documents = load_documents(documents_path)
-    vectorstore.add_documents(documents)
-    vectorstore.persist()
+    if documents:
+        vectorstore.add_documents(documents)  # Добавляем документы в хранилище
+        # Пересоздаём объект Chroma для работы с обновлённой базой
+        vectorstore = Chroma(
+            collection_name="psychology_base",
+            embedding_function=embeddings,
+            persist_directory=settings.CHROMA_PERSIST_DIR,
+        )
+    else:
+        print("No documents found to add to the vectorstore.")
+except FileNotFoundError as fnf_error:
+    print(f"Ошибка: {fnf_error}")
 except Exception as e:
     print(f"Ошибка при загрузке документов: {e}")
 
 # Создаём LLM
 llm = ChatOpenAI(
-    model_name="gpt-4", openai_api_key=settings.OPENAI_API_KEY, temperature=0.7
+    model_name="o1-mini",
+    openai_api_key=settings.OPENAI_API_KEY,
 )
 
-# Retrieval цепочка (QA)
+# Создаём ретривер
 retriever = vectorstore.as_retriever(search_kwargs={"k": settings.retriever_k})
+
+# Создаём RetrievalQA цепочку (chain_type="stuff")
 qa_chain = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type="stuff",
     retriever=retriever,
-    chain_type_kwargs={
-        "document_variable_name": "question",  # Указываем правильное имя переменной
-        "prompt": chat_prompt,  # Используем существующий промпт
-    },
+    chain_type_kwargs={"prompt": chat_prompt, "verbose": True},
 )

@@ -1,17 +1,16 @@
-from langchain.prompts import ChatPromptTemplate
+from langchain.prompts import PromptTemplate
 
-system_message = """
-Ты — психологический AI-ассистент. Отвечай дружелюбно и поддерживающе, 
-используй базовые понятия психологии. Если не знаешь ответа, скажи об этом прямо.
-"""
+chat_prompt = PromptTemplate(
+    input_variables=["context", "question"],
+    template="""
+    Используйте следующий контекст для ответа на вопрос.
 
-user_message = """
-Вопрос пользователя: {question}
-"""
+    Контекст:
+    {context}
 
-chat_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_message),
+    Вопрос:
+    {question}
 
-    ]
+    Ответ:
+    """,
 )

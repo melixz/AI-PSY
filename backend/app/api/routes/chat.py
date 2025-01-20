@@ -9,7 +9,7 @@ router = APIRouter(prefix="/chat", tags=["Chat"])
 async def ask_chat(request: ChatRequest):
     try:
         response = await qa_chain.ainvoke({"query": request.question})
-        answer = response.get("result", "Ошибка: Ответ отсутствует.")
+        answer = response.get("result", "Ответ не найден")
         return ChatResponse(answer=answer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка: {str(e)}")

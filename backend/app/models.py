@@ -7,11 +7,3 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str
-
-
-class ErrorResponse(BaseModel):
-    detail: str
-
-
-class SuccessResponse(BaseModel):
-    detail: str
