@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from backend.app.models import ChatRequest, ChatResponse
-from backend.app.vectors.vector import qa_chain
+from app.models import ChatRequest, ChatResponse
+from app.vectors.vector import qa_chain
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 

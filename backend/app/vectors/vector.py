@@ -5,8 +5,8 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from backend.app.core.config import settings
-from .prompt import chat_prompt
+from app.core.config import settings
+from app.vectors.prompt import cbt_prompt
 
 # Инициализация эмбеддингов
 embeddings = OpenAIEmbeddings(openai_api_key=settings.OPENAI_API_KEY)
@@ -69,5 +69,5 @@ qa_chain = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type="stuff",
     retriever=retriever,
-    chain_type_kwargs={"prompt": chat_prompt, "verbose": True},
+    chain_type_kwargs={"prompt": cbt_prompt, "verbose": True},
 )
