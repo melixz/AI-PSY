@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '@fontsource/inter/400.css'; /* Регулярный */
-@import '@fontsource/inter/500.css'; /* Средний */
-@import '@fontsource/inter/600.css'; /* Полужирный */
-@import '@fontsource/inter/700.css'; /* Жирный */
-
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

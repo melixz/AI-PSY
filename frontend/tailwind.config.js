@@ -13,7 +13,7 @@ export default {
         black_50: '#00000080',
         text: '#0A0A0A',
         bluer_20: '#A0B2E5',
-        red: '#FF5F96E91'
+        red: '#F96E91'
       },
       backgroundImage: {
         violet_7: 'linear-gradient(90deg, #9A70B1 0%, #ED9494 100%)',
@@ -37,4 +37,3 @@ export default {
   },
   plugins: [],
 }
-
