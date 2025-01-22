@@ -1,34 +1,30 @@
 import React, { useState } from 'react';
-
 interface ModeCardProps {
   title: string;
   description: string;
+  onClick: () => void;
+  isSelected: boolean;
 }
 
-const ModeCard: React.FC<ModeCardProps> = ({ title, description }) => {
+const ModeCard: React.FC<ModeCardProps> = ({ title, description, onClick, isSelected }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
 
-  // Когда не наведено или кликнуто, используем серую рамку.
-  // Когда наведено и не кликнуто — делаем рамку "прозрачной",
-  // чтобы псевдоэлемент поверх показал градиент.
-  const borderClasses = isHovered && !isClicked 
+  const borderClasses = isHovered && !isSelected
     ? 'border-transparent'
+    : isSelected
+    ? 'border-blue'
     : 'border-gray';
 
-  // Фон белый, пока не кликнули.
-  // При клике меняем фон на градиентный класс bg-violet_7 (пример).
-  const backgroundClasses = isClicked ? 'bg-violet_7' : 'bg-white';
+  const backgroundClasses = isSelected ? 'bg-violet_7' : 'bg-white';
 
   return (
     <div
       className={`relative p-6 rounded-[30px] w-[402px] h-[122px] border-[1px] ${borderClasses} ${backgroundClasses}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => setIsClicked(!isClicked)}
+      onClick={onClick}
     >
-      {/* При наведении и отсутствии клика добавляем псевдоэлемент-градиент */}
-      {isHovered && !isClicked && (
+      {isHovered && !isSelected && (
         <div
           className="absolute inset-0 rounded-[30px] pointer-events-none z-0"
           style={{
@@ -38,8 +34,8 @@ const ModeCard: React.FC<ModeCardProps> = ({ title, description }) => {
           }}
         />
       )}
-      <div className="relative text-lg font-semibold mb-2 z-10">{title}</div>
-      <div className="relative text-gray-600 text-sm z-10">{description}</div>
+      <div className="relative text-heading4 text-black mb-2 z-10">{title}</div>
+      <div className="relative text-body1 text-black_50 z-10">{description}</div>
     </div>
   );
 };
