@@ -3,19 +3,24 @@ import logo from '../assets/icons/logo.svg';
 import helpIcon from '../assets/icons/help.svg';
 import settingsIcon from '../assets/icons/settings.svg';
 
+interface User {
+  name: string;
+  last_name: string;
+}
+
 // Моковые данные с сервера
-const mockUsers = [
+const mockUsers: User[] = [
   { name: 'Антон', last_name: 'Антонов' },
   { name: 'Иван', last_name: 'Иванов' },
   { name: 'Мария', last_name: 'Сидорова' },
 ];
 
-const mockActiveUsersCount = 35000;
+const mockActiveUsersCount: number = 35000;
 
 const NavBar: React.FC = () => {
   // Берём первого пользователя из мокового массива
-  const currentUser = mockUsers[0];
-  const activeUsers = mockActiveUsersCount;
+  const currentUser: User = mockUsers[0];
+  const activeUsers: number = mockActiveUsersCount;
 
   return (
     <div className="flex items-center justify-between px-6 py-4 bg-white w-[1438px] h-[92px]">

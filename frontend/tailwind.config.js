@@ -16,7 +16,7 @@ export default {
         red: '#F96E91'
       },
       backgroundImage: {
-        violet_7: 'linear-gradient(90deg, #9A70B1 0%, #ED9494 100%)',
+        violet_7: 'linear-gradient(90deg, rgba(154, 112, 177, 0.07) 0%, rgba(237, 148, 148, 0.07) 100%)',
         blue: 'linear-gradient(90deg, #6FDBB8 0%, #6EBFF9 100%)',
       },
       fontFamily: {
