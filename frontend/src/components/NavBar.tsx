@@ -8,7 +8,6 @@ interface User {
   last_name: string;
 }
 
-// Моковые данные с сервера
 const mockUsers: User[] = [
   { name: 'Антон', last_name: 'Антонов' },
   { name: 'Иван', last_name: 'Иванов' },
@@ -18,12 +17,11 @@ const mockUsers: User[] = [
 const mockActiveUsersCount: number = 35000;
 
 const NavBar: React.FC = () => {
-  // Берём первого пользователя из мокового массива
   const currentUser: User = mockUsers[0];
   const activeUsers: number = mockActiveUsersCount;
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 bg-white w-[1438px] h-[92px]">
+    <div className="flex items-center justify-between px-6 py-4 bg-white w-[70vw] h-[92px]">
       {/* Левая часть с логотипом и активными пользователями */}
       <div className="flex items-center">
         <img src={logo} alt="Logo" className="h-[48px] w-[48px] mr-4" />
