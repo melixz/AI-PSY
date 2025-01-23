@@ -1,11 +1,14 @@
 from fastapi import APIRouter, HTTPException
+
+
 from langchain_core.prompts import PromptTemplate
 
-from backend.app.models import ChatRequest, ChatResponse
-from backend.app.vectors.vector import get_qa_chain_for_prompt, qa_chain_base, get_filtered_retriever
-from backend.app.vectors.prompt import base_prompt
-from backend.app.vectors.psy_directions.direction_prompts import get_direction_prompt
-from backend.app.vectors.psy_problems.problem_prompts import get_problem_prompt
+from app.models import ChatRequest, ChatResponse
+from app.vectors.vector import get_qa_chain_for_prompt, qa_chain_base, get_filtered_retriever
+from app.vectors.prompt import base_prompt
+from app.vectors.psy_directions.direction_prompts import get_direction_prompt
+from app.vectors.psy_problems.problem_prompts import get_problem_prompt
+
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
