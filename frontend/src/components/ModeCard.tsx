@@ -19,7 +19,7 @@ const ModeCard: React.FC<ModeCardProps> = ({ title, description, onClick, isSele
 
   return (
     <div
-      className={`relative p-6 rounded-[30px] w-[402px] h-[122px] border-[1px] ${borderClasses} ${backgroundClasses}`}
+      className={`relative px-[16px] py-[12px] rounded-[30px] w-[388px] h-[146px] border-[1px] border-gray ${borderClasses} ${backgroundClasses}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
@@ -28,7 +28,7 @@ const ModeCard: React.FC<ModeCardProps> = ({ title, description, onClick, isSele
         <div
           className="absolute inset-0 rounded-[30px] pointer-events-none z-0"
           style={{
-            border: '2px solid transparent',
+            border: '1px solid transparent',
             background:
               'linear-gradient(white, white) padding-box, linear-gradient(to right, #6FDBB8, #6EBFF9) border-box',
           }}

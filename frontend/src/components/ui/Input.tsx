@@ -47,7 +47,7 @@ const Input: React.FC<InputProps> = ({ placeholder, disabled = false, onSubmit }
             : isFocused
             ? {
                 // Если в фокусе: градиентная рамка, белый фон внутри
-                border: '2px solid transparent',
+                border: '1px solid transparent',
                 background:
                   'linear-gradient(#fff, #fff) padding-box, linear-gradient(to right, #6FDBB8, #6EBFF9) border-box',
               }
@@ -63,7 +63,7 @@ const Input: React.FC<InputProps> = ({ placeholder, disabled = false, onSubmit }
       >
         {/* Левая иконка или индикатор загрузки */}
         {isLoading ? (
-          <div className="loader w-[20px] h-[20px] border-2 border-t-blue-500 border-gray-300 rounded-full animate-spin" />
+          <div className="loader w-[20px] h-[20px] border-[1px] border-t-blue-500 border-gray-300 rounded-full animate-spin" />
         ) : (
           <img src={inputIcon} alt="icon" className="w-[20px] h-[20px]" />
         )}

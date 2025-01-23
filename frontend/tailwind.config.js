@@ -29,7 +29,7 @@ export default {
         heading4: ['16px', { lineHeight: '1.4', fontWeight: '500' }],
         subtitle1: ['16px', { lineHeight: 'auto', fontWeight: '400' }],
         subtitle2: ['12px', { lineHeight: 'auto', fontWeight: '400' }],
-        body1: ['14px', { lineHeight: 'auto', fontWeight: '400' }],
+        body1: ['14px', { lineHeight: '1.3', fontWeight: '400' }],
         body2: ['24px', { lineHeight: 'auto', fontWeight: '500' }],
         button: ['14px', { lineHeight: 'auto', fontWeight: '500' }],
       },
