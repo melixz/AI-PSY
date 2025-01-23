@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routes import chat
+from app.api.routes import chat
 
 app = FastAPI(
     title="AI_PSY LangChain API",
