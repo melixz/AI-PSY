@@ -13,47 +13,83 @@ const ChatComponent: React.FC = () => {
     {
       id: 1,
       sender: "assistant",
-      content: "Что вас сейчас беспокоит? Расскажите о своих чувствах и мыслях",
+      content: "Здравствуйте! Чем могу помочь?",
     },
   ]);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (value: string) => {
+  const handleSubmit = async (value: string) => {
     if (!value.trim()) return;
 
+    // Добавляем пользовательское сообщение
     const userMessage: Message = {
       id: Date.now(),
       sender: "user",
       content: value,
     };
-
     setMessages((prev) => [...prev, userMessage]);
+
+    // Ставим флаг загрузки
     setIsLoading(true);
 
-    // Имитация запроса к бэкенду
-    setTimeout(() => {
+    try {
+      const response = await fetch("http://185.70.196.104/chat/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: value }),
+      });
+
+      if (response.ok) {
+        // Если всё в порядке (200)
+        const data = await response.json(); // { answer: "string" }
+        const assistantResponse: Message = {
+          id: Date.now() + 1,
+          sender: "assistant",
+          content: data.answer,
+        };
+        setMessages((prev) => [...prev, assistantResponse]);
+      } else if (response.status === 422) {
+        // Обработка валидационной ошибки (422)
+        // Можно извлечь detail и показать пользователю
+        const errorData = await response.json(); // { detail: [...] }
+        const errorMessage = errorData?.detail?.[0]?.msg || "Ошибка валидации";
+        const assistantResponse: Message = {
+          id: Date.now() + 1,
+          sender: "assistant",
+          content: `Извините, произошла ошибка: ${errorMessage}`,
+        };
+        setMessages((prev) => [...prev, assistantResponse]);
+      } else {
+        // Любая другая ошибка
+        const assistantResponse: Message = {
+          id: Date.now() + 1,
+          sender: "assistant",
+          content: `Извините, ошибка на сервере (код ${response.status}).`,
+        };
+        setMessages((prev) => [...prev, assistantResponse]);
+      }
+    } catch (error) {
+      // Обработка сетевых ошибок, таймаута и т.д.
+      console.error("Ошибка при запросе:", error);
       const assistantResponse: Message = {
         id: Date.now() + 1,
         sender: "assistant",
-        content:
-          "Здравствуйте! Спасибо, что поделились своими переживаниями. Я понимаю, как непросто...",
+        content: "Извините, не удалось связаться с сервером.",
       };
       setMessages((prev) => [...prev, assistantResponse]);
+    } finally {
+      // В любом случае снимаем флаг загрузки
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   return (
-    // flex + h-full => растягивается на высоту родителя
-    <div className="flex flex-col w-full h-full min-h-0 bg-white">
-      {/* 
-         Блок с сообщениями:
-         1) flex-1: растягивается
-         2) min-h-0: разрешает вложенную прокрутку
-         3) overflow-y-auto: вертикальный скролл, если сообщений много
-      */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4">
+    <div className="flex flex-col h-full w-full bg-white">
+      {/* Поле с диалогом (прокручиваемая область) */}
+      <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -97,7 +133,7 @@ const ChatComponent: React.FC = () => {
         <button className="px-4 py-2 rounded bg-gray-200">New dialog</button>
       </div>
 
-      {/* Поле ввода */}
+      {/* Инпут */}
       <div className="flex-none bg-white p-4">
         <Input
           placeholder="Введите сообщение"
