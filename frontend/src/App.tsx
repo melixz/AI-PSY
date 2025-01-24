@@ -6,18 +6,11 @@ import './App.css';
 function App() {
   return (
     <Router>
-      {/* Общий "фон" и контейнер */}
       <div className='container-1920 flex justify-center bg-white text-text'>
-        
-        {/* Точка переключения маршрутов */}
         <Routes>
-          {/* Стартовая страница */}
           <Route path="/" element={<StartPage />} />
-
-          {/* Главная страница после клика */}
           <Route path="/home" element={<HomePage />} />
         </Routes>
-
       </div>
     </Router>
   );

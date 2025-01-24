@@ -1,33 +1,38 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import Input from "../components/ui/Input";
 import SideBar from "../components/SideBar";
+import ChatComponent from "../components/ChatComponent";
+import TestsComponent from "../components/TestsComponent";
+import DiaryComponent from "../components/DiaryComponent";
 
 export const HomePage: React.FC = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const mode = Number(params.get("mode"));
 
-  const handleSubmit = (value: string) => {
-    console.log('Submitted:', value);
+  const renderModeComponent = () => {
+    switch (mode) {
+      case 1:
+        return <ChatComponent />;
+      case 2:
+        return <TestsComponent />;
+      case 3:
+        return <DiaryComponent />;
+      default:
+        return <div>Выберите режим для взаимодействия</div>;
+    }
   };
 
   return (
-    <div className='container-1920 flex bg-white text-text'>
-      <SideBar/>
-      <div className="flex flex-col justify-start text-text">
+    <div className="container-1920 flex bg-white text-text">
+      <SideBar />
+      <div className="flex flex-col flex-1">
         <NavBar />
-        <div className="space-y-6 p-6">
-          {/* Вариант 1: Инпут не нажат */}
-          <div>
-            <h2 className="mb-2 text-lg font-bold">Вариант 1: Инпут не нажат</h2>
-            <Input placeholder="Введите сообщение" onSubmit={handleSubmit} />
-          </div>
-
-          {/* Вариант 3: Инпут неактивен */}
-          <div>
-            <h2 className="mb-2 text-lg font-bold">Вариант 3: Инпут неактивен</h2>
-            <Input placeholder="Введите сообщение" disabled onSubmit={handleSubmit} />
-          </div>
-        </div>
+        <div className="p-6">{renderModeComponent()}</div>
       </div>
     </div>
   );
 };
+
+export default HomePage;

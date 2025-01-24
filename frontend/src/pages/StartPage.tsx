@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Используем React Router для переходов
 import NavBar from "../components/NavBar";
 import logo from "../assets/icons/logo.svg";
 import Input from "../components/ui/Input";
@@ -12,6 +13,7 @@ interface Mode {
 
 export const StartPage: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const modes: Mode[] = [
     {
@@ -36,12 +38,17 @@ export const StartPage: React.FC = () => {
 
   const handleSubmit = (value: string) => {
     console.log("Submitted:", value);
+    setTimeout(() => {
+      if (selectedMode !== null) {
+        navigate(`/home?mode=${selectedMode}`);
+      }
+    }, 2000); // Заглушка загрузки
   };
 
   return (
-    <div className="container-1438 flex flex-col items-center h-[100vh]">
+    <div className="container-1438 flex flex-col items-center h-[100vh] bg-white">
       <NavBar />
-      <div className='flex flex-col justify-center items-center w-[800px] h-[755px] mt-[3vh]'>
+      <div className="flex flex-col justify-center items-center w-[800px] h-[755px] mt-[3vh]">
         <div className="text-heading1 text-text mb-[2vh]">Psychological Chat GPT</div>
         <div className="text-subtitle1 text-black_50 mb-[3vh]">Ver 4.0 Mar 14</div>
         <div className="flex items-start py-[24px] pr-[100px] gap-[16px]">
@@ -49,7 +56,9 @@ export const StartPage: React.FC = () => {
           <div className="flex flex-col">
             <div className="text-black text- mb-[2vh]">2.03 PM, 15 Nov</div>
             <div className="text-black text-">
-              Приветствуем вас в нашем психологическом джипити-чате! Мы рады, что вы решили присоединиться к нам. Здесь вы сможете получить квалифицированную помощь и поддержку по вопросам психологии и пройти различные психологические тесты, а так же записать свои мысли в дневнике. Однако перед тем как начать консультацию, нам нужно выбрать режим для дальнейшего взаимодействия.
+              Приветствуем вас в нашем психологическом джипити-чате! Мы рады, что вы решили присоединиться к нам. Здесь вы сможете получить квалифицированную помощь и поддержку по вопросам психологии и пройти различные психологические тесты, а также записать свои мысли в дневнике. 
+              <br />
+              Однако перед тем как начать консультацию, нам нужно выбрать режим для дальнейшего взаимодействия.
               <br />
               <br />
               Это может быть:
@@ -72,3 +81,5 @@ export const StartPage: React.FC = () => {
     </div>
   );
 };
+
+export default StartPage;
