@@ -34,7 +34,7 @@ export const HomePage: React.FC = () => {
         setActiveButton={setActiveButton}
         setSelectedMode={setSelectedMode}
       />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 justify-between">
         <NavBar />
         <div className="p-6">{renderModeComponent()}</div>
       </div>
