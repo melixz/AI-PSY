@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SideBar from "../components/SideBar";
@@ -10,6 +10,7 @@ export const HomePage: React.FC = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const mode = Number(params.get("mode"));
+  const [activeButton, setActiveButton] = useState<'main' | 'history'>('main');
 
   const renderModeComponent = () => {
     switch (mode) {
@@ -26,7 +27,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="container-1920 flex bg-white text-text">
-      <SideBar />
+      <SideBar activeButton={activeButton} setActiveButton={setActiveButton} />
       <div className="flex flex-col flex-1">
         <NavBar />
         <div className="p-6">{renderModeComponent()}</div>

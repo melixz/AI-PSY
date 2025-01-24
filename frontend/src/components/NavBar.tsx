@@ -22,7 +22,6 @@ const NavBar: React.FC = () => {
 
   return (
     <div className="flex items-center justify-between px-6 py-4 bg-white w-[70vw] h-[92px]">
-      {/* Левая часть с логотипом и активными пользователями */}
       <div className="flex items-center">
         <img src={logo} alt="Logo" className="h-[48px] w-[48px] mr-4" />
         <div>
@@ -30,8 +29,6 @@ const NavBar: React.FC = () => {
           <div className="text-sm text-transparent bg-gradient-to-r from-[#6FDBB8] to-[#6EBFF9] bg-clip-text">• Active {activeUsers.toLocaleString()} people</div>
         </div>
       </div>
-
-      {/* Правая часть с иконками и именем пользователя */}
       <div className="flex items-center space-x-24">
         <div className='flex items-center space-x-6'>
           <button className="flex items-center text-black_50 hover:text-black">
