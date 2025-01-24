@@ -6,7 +6,7 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <div className='container-1920 flex justify-center bg-white text-text'>
+      <div className='container-1920 h-full flex justify-center bg-white text-text'>
         <Routes>
           <Route path="/" element={<StartPage />} />
           <Route path="/home" element={<HomePage />} />

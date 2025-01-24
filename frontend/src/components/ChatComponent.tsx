@@ -31,7 +31,7 @@ const ChatComponent: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Имитация запроса к бекенду
+    // Имитация запроса к бэкенду
     setTimeout(() => {
       const assistantResponse: Message = {
         id: Date.now() + 1,
@@ -41,12 +41,12 @@ const ChatComponent: React.FC = () => {
       };
       setMessages((prev) => [...prev, assistantResponse]);
       setIsLoading(false);
-    }, 2000); // Заглушка для загрузки
+    }, 2000);
   };
 
   return (
-    <div className="flex-col h-[100%] bg-white">
-      {/* Поле с диалогом */}
+    <div className="flex flex-col h-screen bg-white">
+      {/* Поле с диалогом (прокручиваемая область) */}
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
@@ -56,14 +56,14 @@ const ChatComponent: React.FC = () => {
             }`}
           >
             {message.sender === "assistant" ? (
-              <div className="flex items-center gap-[16px]">
+              <div className="flex items-center gap-[16px] mb-1">
                 <img src={logo} alt="logo" className="w-[30px]" />
-                <div className="text-xs text-black">
+                <div className="text-xs text-gray-400">
                   {new Date(message.id).toLocaleTimeString()}
                 </div>
               </div>
             ) : (
-              <div className="text-xs text-black_50 mb-1">
+              <div className="text-xs text-gray-400 mb-1">
                 {new Date(message.id).toLocaleTimeString()}
               </div>
             )}
@@ -80,8 +80,8 @@ const ChatComponent: React.FC = () => {
         ))}
       </div>
 
-      {/* Панель управления */}
-      <div className="flex justify-between items-center px-4 py-2">
+      {/* Панель управления (фиксирована внизу) */}
+      <div className="flex-none flex justify-between items-center bg-white px-4 py-2 shadow">
         <div className="flex gap-2">
           <button className="px-4 py-2 rounded bg-gray-200">Translate</button>
           <button className="px-4 py-2 rounded bg-gray-200">Improve</button>
@@ -91,8 +91,8 @@ const ChatComponent: React.FC = () => {
         <button className="px-4 py-2 rounded bg-gray-200">New dialog</button>
       </div>
 
-      {/* Инпут */}
-      <div className="p-4">
+      {/* Инпут (тоже зафиксирован внизу) */}
+      <div className="flex-none bg-white p-4 shadow">
         <Input
           placeholder="Введите сообщение"
           disabled={isLoading}
