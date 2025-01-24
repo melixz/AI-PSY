@@ -1,41 +1,45 @@
-import React, { useState } from 'react';
-import ModeCard from './ModeCard';
-import Checkbox from './ui/Checkbox';
+import React, { useState } from "react";
+import ModeCard from "./ModeCard";
+import Checkbox from "./ui/Checkbox";
+
 interface Mode {
   id: number;
   title: string;
   description: string;
 }
 
-const ModeBar: React.FC = () => {
+interface ModeBarProps {
+  setSelectedMode: (mode: number | null) => void;
+}
+
+const ModeBar: React.FC<ModeBarProps> = ({ setSelectedMode }) => {
   const modes: Mode[] = [
     {
       id: 1,
-      title: 'Чат',
+      title: "Чат",
       description:
-        'Здесь вы сможете получить квалифицированную помощь и поддержку по различным вопросам психологии в формате чата.',
+        "Здесь вы сможете получить квалифицированную помощь и поддержку по различным вопросам психологии в формате чата.",
     },
     {
       id: 2,
-      title: 'Тесты',
+      title: "Тесты",
       description:
-        'Здесь вы можете пройти различные психологические тесты. Они помогут вам лучше понять себя, свои эмоции и поведение.',
+        "Здесь вы можете пройти различные психологические тесты. Они помогут вам лучше понять себя, свои эмоции и поведение.",
     },
     {
       id: 3,
-      title: 'Дневник',
+      title: "Дневник",
       description:
-        'Здесь вы можете написать свои мысли не в формате диалога, а чат их проанализирует.',
+        "Здесь вы можете написать свои мысли не в формате диалога, а чат их проанализирует.",
     },
   ];
 
   const checkboxes = [
-    { id: 1, label: 'Показывать ссылку на ресурс' },
-    { id: 2, label: 'Показывать предлагаемый prompt' },
+    { id: 1, label: "Показывать ссылку на ресурс" },
+    { id: 2, label: "Показывать предлагаемый prompt" },
   ];
 
-  const [selectedMode, setSelectedMode] = useState<number | null>(null);
-
+  const [selectedMode, setLocalSelectedMode] = useState<number | null>(null);
   const [checkboxStates, setCheckboxStates] = useState<{ [key: number]: boolean }>(
     checkboxes.reduce((acc, checkbox) => ({ ...acc, [checkbox.id]: false }), {})
   );
@@ -48,7 +52,9 @@ const ModeBar: React.FC = () => {
   };
 
   const handleModeClick = (id: number) => {
-    setSelectedMode((prev) => (prev === id ? null : id));
+    const newMode = selectedMode === id ? null : id;
+    setLocalSelectedMode(newMode);
+    setSelectedMode(newMode);
   };
 
   return (
