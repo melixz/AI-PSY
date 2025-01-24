@@ -37,7 +37,7 @@ const ChatComponent: React.FC = () => {
         id: Date.now() + 1,
         sender: "assistant",
         content:
-          "Здравствуйте! Спасибо, что поделились своими переживаниями. Я понимаю, как непросто бывает отпускать прошлое и двигаться вперёд. Давайте попробуем разобраться в ваших чувствах и мыслях вместе.",
+          "Здравствуйте! Спасибо, что поделились своими переживаниями. Я понимаю, как непросто...",
       };
       setMessages((prev) => [...prev, assistantResponse]);
       setIsLoading(false);
@@ -45,9 +45,15 @@ const ChatComponent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* Поле с диалогом (прокручиваемая область) */}
-      <div className="flex-1 overflow-y-auto p-4">
+    // flex + h-full => растягивается на высоту родителя
+    <div className="flex flex-col w-full h-full min-h-0 bg-white">
+      {/* 
+         Блок с сообщениями:
+         1) flex-1: растягивается
+         2) min-h-0: разрешает вложенную прокрутку
+         3) overflow-y-auto: вертикальный скролл, если сообщений много
+      */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -80,8 +86,8 @@ const ChatComponent: React.FC = () => {
         ))}
       </div>
 
-      {/* Панель управления (фиксирована внизу) */}
-      <div className="flex-none flex justify-between items-center bg-white px-4 py-2 shadow">
+      {/* Панель управления */}
+      <div className="flex-none flex justify-between items-center bg-white px-4 py-2">
         <div className="flex gap-2">
           <button className="px-4 py-2 rounded bg-gray-200">Translate</button>
           <button className="px-4 py-2 rounded bg-gray-200">Improve</button>
@@ -91,8 +97,8 @@ const ChatComponent: React.FC = () => {
         <button className="px-4 py-2 rounded bg-gray-200">New dialog</button>
       </div>
 
-      {/* Инпут (тоже зафиксирован внизу) */}
-      <div className="flex-none bg-white p-4 shadow">
+      {/* Поле ввода */}
+      <div className="flex-none bg-white p-4">
         <Input
           placeholder="Введите сообщение"
           disabled={isLoading}

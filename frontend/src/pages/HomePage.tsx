@@ -28,7 +28,7 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="container-1920 flex bg-white text-text">
+    <div className="flex h-screen bg-white text-text">
       <SideBar
         activeButton={activeButton}
         setActiveButton={setActiveButton}
@@ -36,7 +36,9 @@ export const HomePage: React.FC = () => {
       />
       <div className="flex flex-col flex-1 justify-between">
         <NavBar />
-        <div className="p-6">{renderModeComponent()}</div>
+        <div className="flex-1 min-h-0 p-6 overflow-hidden">
+          {renderModeComponent()}
+        </div>
       </div>
     </div>
   );
