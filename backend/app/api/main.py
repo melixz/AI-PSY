@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from app.core.middlewares import setup_cors
 from app.api.routes import chat
 
 app = FastAPI(
@@ -8,12 +8,6 @@ app = FastAPI(
     description="Психологический AI-ассистент, основанный на LangChain",
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], #TODO ИЗМЕНИТЬ НА РЕАЛЬНЫЙ ДОМЕН!!!
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+setup_cors(app)
 
 app.include_router(chat.router)
