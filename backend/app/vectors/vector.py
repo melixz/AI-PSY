@@ -58,11 +58,9 @@ try:
 
     if all_docs:
         vectorstore.add_documents(all_docs)
-        vectorstore.persist()
         print(f"✅ Успешно загружено {len(all_docs)} документов в векторное хранилище.")
     else:
         print("⚠️ Нет документов для загрузки.")
-
 except Exception as e:
     print("❌ Ошибка загрузки документов:", e)
 
@@ -75,7 +73,8 @@ def get_filtered_retriever(direction=None, problem=None):
         flt["direction"] = direction
     if problem:
         flt["problem"] = problem
-
+    if not flt:
+        return vectorstore.as_retriever(search_kwargs={"k": settings.retriever_k})
     return vectorstore.as_retriever(
         search_kwargs={"k": settings.retriever_k, "filter": flt}
     )
