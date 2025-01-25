@@ -35,6 +35,14 @@ def load_docs_with_meta(base_path: str, category: str):
             split_docs = splitter.split_documents(raw_docs)
             for doc in split_docs:
                 doc.metadata[category] = val
+                doc.metadata["source"] = str(doc.metadata.get("source", subdir))
+                doc.metadata["file_name"] = Path(doc.metadata.get("source", "")).name
+                doc.metadata["file_path"] = str(subdir)
+                doc.metadata["file_size"] = (
+                    os.path.getsize(doc.metadata["source"])
+                    if "source" in doc.metadata
+                    else None
+                )
             docs.extend(split_docs)
     return docs
 
@@ -42,14 +50,21 @@ def load_docs_with_meta(base_path: str, category: str):
 try:
     directions_path = "backend/app/documents/psychology/psy_directions"
     direction_docs = load_docs_with_meta(directions_path, "direction")
+
     problems_path = "backend/app/documents/psychology/psy_problems"
     problem_docs = load_docs_with_meta(problems_path, "problem")
+
     all_docs = direction_docs + problem_docs
+
     if all_docs:
         vectorstore.add_documents(all_docs)
         vectorstore.persist()
+        print(f"✅ Успешно загружено {len(all_docs)} документов в векторное хранилище.")
+    else:
+        print("⚠️ Нет документов для загрузки.")
+
 except Exception as e:
-    print("Ошибка загрузки документов:", e)
+    print("❌ Ошибка загрузки документов:", e)
 
 llm = ChatOpenAI(model_name="o1-mini", openai_api_key=settings.OPENAI_API_KEY)
 
@@ -60,8 +75,7 @@ def get_filtered_retriever(direction=None, problem=None):
         flt["direction"] = direction
     if problem:
         flt["problem"] = problem
-    if not flt:
-        return vectorstore.as_retriever(search_kwargs={"k": settings.retriever_k})
+
     return vectorstore.as_retriever(
         search_kwargs={"k": settings.retriever_k, "filter": flt}
     )
