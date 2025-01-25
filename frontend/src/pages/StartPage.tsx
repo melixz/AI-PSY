@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Используем React Router для переходов
 import NavBar from "../components/NavBar";
 import logo from "../assets/icons/logo.svg";
-import Input from "../components/ui/Input";
 import ModeCard from "../components/ModeCard";
 
 interface Mode {
@@ -36,13 +35,9 @@ export const StartPage: React.FC = () => {
     },
   ];
 
-  const handleSubmit = (value: string) => {
-    console.log("Submitted:", value);
-    setTimeout(() => {
-      if (selectedMode !== null) {
-        navigate(`/home?mode=${selectedMode}`);
-      }
-    }, 2000); // Заглушка загрузки
+  const handleModeClick = (modeId: number) => {
+    setSelectedMode(modeId);
+    navigate(`/home?mode=${modeId}`);
   };
 
   return (
@@ -71,12 +66,11 @@ export const StartPage: React.FC = () => {
               key={mode.id}
               title={mode.title}
               description={mode.description}
-              onClick={() => setSelectedMode(mode.id)}
+              onClick={() => handleModeClick(mode.id)}
               isSelected={selectedMode === mode.id}
             />
           ))}
         </div>
-        <Input placeholder="Введите сообщение" disabled={selectedMode === null} onSubmit={handleSubmit} />
       </div>
     </div>
   );
