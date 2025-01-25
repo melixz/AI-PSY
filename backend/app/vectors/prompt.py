@@ -1,6 +1,5 @@
 from langchain.prompts import PromptTemplate
 
-# Базовый промт
 base_prompt = PromptTemplate(
     input_variables=["context", "question"],
     template="""
@@ -51,6 +50,5 @@ base_prompt = PromptTemplate(
 {question}
 
 Ответь, адаптируя тональность, длину и стиль ответа к ситуации, используя разнообразие формулировок.
-"""
+""",
 )
-

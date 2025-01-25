@@ -1,15 +1,9 @@
 from langchain.prompts import PromptTemplate
 
-# Промт для панических атак
 panic_prompt = PromptTemplate(
     input_variables=["context", "question"],
     template="""
-У пользователя возникают панические атаки.
-
-Основные моменты:
-- Резкие приступы страха, сопровождающиеся соматическими ощущениями,
-- Важно научиться техникам дыхания, расслабления, распознавать триггеры,
-- При серьёзном ухудшении состояния — обратиться к специалисту.
+У пользователя панические атаки.
 
 Контекст:
 {context}
@@ -17,19 +11,14 @@ panic_prompt = PromptTemplate(
 Вопрос:
 {question}
 
-Дай ответ, учитывая специфику панических атак. Предложи мягкие техники самопомощи, сделай упор на безопасные рекомендации.
-"""
+Ответь с учётом паники и предложи мягкие техники самопомощи.
+""",
 )
 
-# Промт для повышенной тревожности
 anxiety_prompt = PromptTemplate(
     input_variables=["context", "question"],
     template="""
-У пользователя повышенный уровень тревожности.
-
-Основные моменты:
-- Тревога может проявляться в постоянном беспокойстве, напряжении,
-- Полезны техники релаксации, дыхательные упражнения, ведение дневника тревожных мыслей.
+У пользователя тревожность.
 
 Контекст:
 {context}
@@ -37,19 +26,63 @@ anxiety_prompt = PromptTemplate(
 Вопрос:
 {question}
 
-Дай ответ, учитывая специфику тревожности. Предложи практики управления тревогой и упомяни, что при сильной тревоге лучше обратиться к специалисту.
-"""
+Ответь, учитывая тревожность, и предложи упражнения для снижения тревоги.
+""",
 )
 
-# Словарь для удобного доступа
+depression_prompt = PromptTemplate(
+    input_variables=["context", "question"],
+    template="""
+У пользователя депрессия.
+
+Контекст:
+{context}
+
+Вопрос:
+{question}
+
+Ответь с акцентом на поддержку при депрессии.
+""",
+)
+
+burnout_prompt = PromptTemplate(
+    input_variables=["context", "question"],
+    template="""
+У пользователя эмоциональное выгорание.
+
+Контекст:
+{context}
+
+Вопрос:
+{question}
+
+Ответь, делая упор на отдых и баланс.
+""",
+)
+
+relationship_prompt = PromptTemplate(
+    input_variables=["context", "question"],
+    template="""
+У пользователя сложности в отношениях.
+
+Контекст:
+{context}
+
+Вопрос:
+{question}
+
+Ответь с учётом возможных конфликтов или проблем в коммуникации.
+""",
+)
+
 PROBLEM_PROMPTS = {
     "panic": panic_prompt,
     "anxiety": anxiety_prompt,
-    # Добавляем новые проблемы здесь
+    "depression": depression_prompt,
+    "burnout": burnout_prompt,
+    "relationship": relationship_prompt,
 }
 
 
 def get_problem_prompt(problem_name: str):
-    """Возвращает PromptTemplate для указанной проблемы.
-       Если нет в словаре — можно вернуть None или базовый промт."""
     return PROBLEM_PROMPTS.get(problem_name.lower())

@@ -1,76 +1,96 @@
 from fastapi import APIRouter, HTTPException
-
-
-from langchain_core.prompts import PromptTemplate
-
 from app.models import ChatRequest, ChatResponse
-from app.vectors.vector import get_qa_chain_for_prompt, qa_chain_base, get_filtered_retriever
-from app.vectors.prompt import base_prompt
+from app.vectors.vector import get_filtered_retriever
 from app.vectors.psy_directions.direction_prompts import get_direction_prompt
 from app.vectors.psy_problems.problem_prompts import get_problem_prompt
-
+from app.vectors.agent import agent_executor, memory, store_dialog_message
+from app.vectors.multi_direction_chain import multi_direction_chain
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
 
 @router.post("/ask", response_model=ChatResponse)
-async def ask_chat(request: ChatRequest):
-    """
-    Эндпоинт для базового промта (без направления или проблемы).
-    """
+async def ask_rag(request: ChatRequest):
     try:
-        retriever = qa_chain_base.retriever
+        retriever = get_filtered_retriever()
         docs = retriever.invoke(request.question)
-        fallback_context = "Общий контекст о психологии и методах самопомощи."
-        context = "\n".join([doc.page_content for doc in docs]) if docs else fallback_context
-        
-        response = await qa_chain_base.ainvoke({"query": request.question, "context": context})
-        answer = response.get("result", "Ответ не найден")
+        context = (
+            "\n".join([doc.page_content for doc in docs]) if docs else "Общий контекст."
+        )
+        response_text = _create_prompt_with_context(
+            "Общий виртуальный психолог.", context, request.question
+        )
+        memory.chat_memory.add_user_message(response_text)
+        result = agent_executor.invoke({"input": response_text})
+        answer = result["output"]
+        memory.chat_memory.add_ai_message(answer)
+        store_dialog_message(request.question, answer)
         return ChatResponse(answer=answer)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/ask_specialized", response_model=ChatResponse)
-async def ask_chat_specialized(
-        request: ChatRequest,
-        direction: str = None,
-        problem: str = None,
-):
-    print(f"Received question: {request.question}, direction: {direction}, problem: {problem}")
-    """
-    Эндпоинт для работы с промтами направления и/или проблемы.
-    direction = 'cbt', 'gestalt' и т.д.
-    problem = 'panic', 'anxiety' и т.д.
-    """
+@router.post("/ask_cbt", response_model=ChatResponse)
+async def ask_cbt(request: ChatRequest, problem: str = None):
+    return await _handle_specialized_request("cbt", request, problem)
+
+
+@router.post("/ask_gestalt", response_model=ChatResponse)
+async def ask_gestalt(request: ChatRequest, problem: str = None):
+    return await _handle_specialized_request("gestalt", request, problem)
+
+
+@router.post("/ask_psychoanalysis", response_model=ChatResponse)
+async def ask_psychoanalysis(request: ChatRequest, problem: str = None):
+    return await _handle_specialized_request("psychoanalysis", request, problem)
+
+
+@router.post("/ask_multi_direction", response_model=ChatResponse)
+async def ask_multi_direction(request: ChatRequest):
     try:
-        # Получаем подходящий промт
-        prob_prompt = get_problem_prompt(problem) if problem else None
-        dir_prompt = get_direction_prompt(direction) if direction else None
-        
-        # Логика выбора промта:
-        if prob_prompt and dir_prompt:
-            combined_template = f"{dir_prompt.template.strip()}\n\n{prob_prompt.template.strip()}"
-            final_prompt = PromptTemplate(input_variables=["context", "query"], template=combined_template)
-        elif prob_prompt:
-            final_prompt = prob_prompt
-        elif dir_prompt:
-            final_prompt = dir_prompt
-        else:
-            final_prompt = base_prompt
-        
-        print(f"Using prompt: {final_prompt.template}")  # Логируем выбранный промт
-        
+        result = multi_direction_chain.invoke({"user_query": request.question})
+        store_dialog_message(request.question, result)
+        return ChatResponse(answer=result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+async def _handle_specialized_request(
+    direction: str, request: ChatRequest, problem: str = None
+):
+    try:
+        direction_prompt = get_direction_prompt(direction)
+        problem_prompt = get_problem_prompt(problem) if problem else None
         retriever = get_filtered_retriever(direction=direction, problem=problem)
         docs = retriever.invoke(request.question)
-        fallback_context = "Общий контекст о психологии и методах самопомощи."
-        context = "\n".join([doc.page_content for doc in docs]) if docs else fallback_context
-        
-        # Создаём цепочку с выбранным промтом
-        chain = get_qa_chain_for_prompt(final_prompt, direction=direction, problem=problem)
-        response = await chain.ainvoke({"query": request.question, "context": context})
-        answer = response.get("result", "Ответ не найден")
+        context = (
+            "\n".join([doc.page_content for doc in docs]) if docs else "Общий контекст."
+        )
+        final_prompt = _combine_direction_and_problem_prompts(
+            direction_prompt, problem_prompt, context, request.question
+        )
+        memory.chat_memory.add_user_message(final_prompt)
+        result = agent_executor.invoke({"input": final_prompt})
+        answer = result["output"]
+        memory.chat_memory.add_ai_message(answer)
+        store_dialog_message(request.question, answer)
         return ChatResponse(answer=answer)
-    
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def _create_prompt_with_context(system_message: str, context: str, user_query: str):
+    return f"{system_message}\n\nКонтекст:\n{context}\n\nВопрос:\n{user_query}"
+
+
+def _combine_direction_and_problem_prompts(
+    dir_prompt, prob_prompt, context, user_query
+):
+    dir_text = dir_prompt.template if dir_prompt else ""
+    prob_text = prob_prompt.template if prob_prompt else ""
+    combined_prompt = (
+        f"{dir_text.strip()}\n\n{prob_text.strip()}" if prob_prompt else dir_text
+    )
+    return combined_prompt.replace("{context}", context).replace(
+        "{question}", user_query
+    )
