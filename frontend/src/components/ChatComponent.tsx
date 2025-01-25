@@ -22,35 +22,25 @@ const ChatComponent: React.FC = () => {
   const handleSubmit = async (value: string) => {
     if (!value.trim()) return;
 
-    // Добавляем пользовательское сообщение
-    const userMessage: Message = {
-      id: Date.now(),
-      sender: "user",
-      content: value,
-    };
-    setMessages((prev) => [...prev, userMessage]);
-
-    // Ставим флаг загрузки
+    setMessages((prev) => [
+      ...prev, 
+      { id: Date.now(), sender: 'user', content: value }
+    ]);
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://185.70.196.104/chat/ask", {
+      const response = await fetch("/api/proxy", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: value }),
-      });
+      });  
 
       if (response.ok) {
-        // Если всё в порядке (200)
-        const data = await response.json(); // { answer: "string" }
-        const assistantResponse: Message = {
-          id: Date.now() + 1,
-          sender: "assistant",
-          content: data.answer,
-        };
-        setMessages((prev) => [...prev, assistantResponse]);
+        const data = await response.json(); // { answer: "..." }
+        setMessages((prev) => [
+          ...prev, 
+          { id: Date.now() + 1, sender: "assistant", content: data.answer }
+        ]);
       } else if (response.status === 422) {
         // Обработка валидационной ошибки (422)
         // Можно извлечь detail и показать пользователю
