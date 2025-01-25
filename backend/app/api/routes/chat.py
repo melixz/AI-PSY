@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from app.models import ChatRequest, ChatResponse
 from app.vectors.vector import get_filtered_retriever
-from app.vectors.psy_directions.direction_prompts import get_direction_prompt
-from app.vectors.psy_problems.problem_prompts import get_problem_prompt
+from app.prompts.psy_directions.direction_prompts import get_direction_prompt
+from app.prompts.psy_problems.problem_prompts import get_problem_prompt
 from app.vectors.agent import agent_executor, memory, store_dialog_message
 from app.vectors.multi_direction_chain import multi_direction_chain
 

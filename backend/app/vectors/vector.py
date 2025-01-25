@@ -6,8 +6,8 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from backend.app.core.config import settings
-from backend.app.vectors.prompt import base_prompt
+from app.core.config import settings
+from app.prompts.prompt import base_prompt
 
 embeddings = OpenAIEmbeddings(openai_api_key=settings.OPENAI_API_KEY)
 
