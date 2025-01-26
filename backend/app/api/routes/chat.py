@@ -3,7 +3,7 @@ from app.models import ChatRequest, ChatResponse
 from app.vectors.vector import get_filtered_retriever
 from app.prompts.psy_directions.direction_prompts import get_direction_prompt
 from app.prompts.psy_problems.problem_prompts import get_problem_prompt
-from app.vectors.agent import agent_executor, memory, store_dialog_message
+from app.vectors.agent import process_user_input, store_dialog_message
 from app.vectors.multi_direction_chain import multi_direction_chain
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
@@ -20,12 +20,9 @@ async def ask_rag(request: ChatRequest):
         response_text = _create_prompt_with_context(
             "Общий виртуальный психолог.", context, request.question
         )
-        memory.chat_memory.add_user_message(response_text)
-        result = agent_executor.invoke({"input": response_text})
-        answer = result["output"]
-        memory.chat_memory.add_ai_message(answer)
-        store_dialog_message(request.question, answer)
-        return ChatResponse(answer=answer)
+        result = process_user_input(response_text)
+        store_dialog_message(request.question, result)
+        return ChatResponse(answer=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -69,12 +66,9 @@ async def _handle_specialized_request(
         final_prompt = _combine_direction_and_problem_prompts(
             direction_prompt, problem_prompt, context, request.question
         )
-        memory.chat_memory.add_user_message(final_prompt)
-        result = agent_executor.invoke({"input": final_prompt})
-        answer = result["output"]
-        memory.chat_memory.add_ai_message(answer)
-        store_dialog_message(request.question, answer)
-        return ChatResponse(answer=answer)
+        result = process_user_input(final_prompt)
+        store_dialog_message(request.question, result)
+        return ChatResponse(answer=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

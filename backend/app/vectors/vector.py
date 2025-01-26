@@ -48,10 +48,10 @@ def load_docs_with_meta(base_path: str, category: str):
 
 
 try:
-    directions_path = "backend/app/documents/psychology/psy_directions"
+    directions_path = "app/documents/psychology/psy_directions"
     direction_docs = load_docs_with_meta(directions_path, "direction")
 
-    problems_path = "backend/app/documents/psychology/psy_problems"
+    problems_path = "app/documents/psychology/psy_problems"
     problem_docs = load_docs_with_meta(problems_path, "problem")
 
     all_docs = direction_docs + problem_docs
