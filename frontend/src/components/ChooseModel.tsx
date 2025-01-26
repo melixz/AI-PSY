@@ -1,9 +1,9 @@
 import React from "react";
 import ModeCard from "./ModeCard";
-import logo from "../assets/icons/logo.svg"; // Путь к иконке
+import logo from "../assets/icons/logo.svg";
 
 interface ChooseModelProps {
-  onModelSelect: () => void;
+  onModelSelect: (modelId: number) => void;
 }
 
 const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
@@ -41,8 +41,7 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
     {
       id: 6,
       title: "Базовый GPT Сhat",
-      description:
-        "Дефолтный чат джипити с сохранением контекста.",
+      description: "Дефолтный чат джипити с сохранением контекста.",
     },
   ];
 
@@ -58,7 +57,9 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
         </div>
 
         {/* Заголовок */}
-        <div className="text-heading3 mb-6 ml-[36px]">Выберите модель чата из предложенных</div>
+        <div className="text-heading3 mb-6 ml-[36px]">
+          Выберите модель чата из предложенных
+        </div>
       </div>
 
       {/* Карточки моделей */}
@@ -68,8 +69,8 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
             key={model.id}
             title={model.title}
             description={model.description}
-            onClick={onModelSelect}
-            isSelected={false} // В данном случае не нужен выбор
+            onClick={() => onModelSelect(model.id)}
+            isSelected={false}
           />
         ))}
       </div>

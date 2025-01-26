@@ -8,7 +8,11 @@ interface Message {
   content: string;
 }
 
-const ChatComponent: React.FC = () => {
+interface ChatComponentProps {
+  onNewDialog: () => void;
+}
+
+const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -22,15 +26,12 @@ const ChatComponent: React.FC = () => {
   const handleSubmit = async (value: string) => {
     if (!value.trim()) return;
 
-    // Добавляем пользовательское сообщение
     const userMessage: Message = {
       id: Date.now(),
       sender: "user",
       content: value,
     };
     setMessages((prev) => [...prev, userMessage]);
-
-    // Ставим флаг загрузки
     setIsLoading(true);
 
     try {
@@ -135,14 +136,19 @@ const ChatComponent: React.FC = () => {
       </div>
 
       {/* Панель управления */}
-      <div className="flex-none flex justify-between items-center bg-white px-4 py-2">
-        <div className="flex gap-2">
+      <div className="flex-none flex justify-end items-center bg-white px-4 py-2">
+        {/* <div className="flex gap-2">
           <button className="px-4 py-2 rounded bg-gray-200">Translate</button>
           <button className="px-4 py-2 rounded bg-gray-200">Improve</button>
           <button className="px-4 py-2 rounded bg-gray-200">Make longer</button>
           <button className="px-4 py-2 rounded bg-gray-200">Make shorter</button>
-        </div>
-        <button className="px-4 py-2 rounded bg-gray-200">New dialog</button>
+        </div> */}
+        <button
+          className="px-4 py-2 rounded bg-gray-200"
+          onClick={onNewDialog} // Вызов функции
+        >
+          New dialog
+        </button>
       </div>
 
       {/* Инпут */}

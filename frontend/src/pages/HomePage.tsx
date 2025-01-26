@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import SideBar from "../components/SideBar";
 import ChatComponent from "../components/ChatComponent";
 import ChooseModel from "../components/ChooseModel";
+import TestsComponent from "../components/TestsComponent";
 import DiaryComponent from "../components/DiaryComponent";
 
 export const HomePage: React.FC = () => {
@@ -19,12 +20,28 @@ export const HomePage: React.FC = () => {
 
   const renderModeComponent = () => {
     if (selectedMode === 1 && showChooseModel) {
-      return <ChooseModel onModelSelect={() => setShowChooseModel(false)} />;
+      return (
+        <ChooseModel
+          onModelSelect={(modelId: number) => {
+            if (modelId === 1) {
+              setSelectedMode(2);
+            } else {
+              setShowChooseModel(false);
+            }
+          }}
+        />
+      );
     }
     switch (selectedMode) {
       case 1:
-        return <ChatComponent />;
+        return (
+          <ChatComponent
+            onNewDialog={() => setShowChooseModel(true)}
+          />
+        );
       case 2:
+        return <TestsComponent />;
+      case 3:
         return <DiaryComponent />;
       default:
         return <div>Выберите режим для взаимодействия</div>;
