@@ -21,15 +21,17 @@ export const HomePage: React.FC = () => {
   const renderModeComponent = () => {
     if (selectedMode === 1 && showChooseModel) {
       return (
-        <ChooseModel
-          onModelSelect={(modelId: number) => {
-            if (modelId === 1) {
-              setSelectedMode(2);
-            } else {
-              setShowChooseModel(false);
-            }
-          }}
-        />
+        <div className="flex-1 min-h-0">
+          <ChooseModel
+            onModelSelect={(modelId: number) => {
+              if (modelId === 1) {
+                setSelectedMode(2);
+              } else {
+                setShowChooseModel(false);
+              }
+            }}
+          />
+        </div>
       );
     }
     switch (selectedMode) {
@@ -57,7 +59,7 @@ export const HomePage: React.FC = () => {
       />
       <div className="flex flex-col flex-1">
         <NavBar />
-        <div className="flex-1 min-h-0 p-6 overflow-hidden ">
+        <div className="flex-1 min-h-0 p-6 overflow-auto ">
           {renderModeComponent()}
         </div>
       </div>
