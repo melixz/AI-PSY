@@ -51,6 +51,9 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
 
   const handleModelClick = (modelId: number) => {
     setSelectedModel(modelId);
+    if (modelId === 1) {
+      onModelSelect(modelId);
+    }
   };
 
   const handleStartConversation = () => {
@@ -93,7 +96,7 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
           </div>
 
           {/* Дополнительное поле под карточками */}
-          {selectedModel !== null && (
+          {selectedModel !== null && selectedModel !== 1 && (
             <div className="mt-6">
               {/* Иконка и дата */}
               <div className="flex items-center gap-2 mb-2">
