@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Используем React Router для переходов
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import logo from "../assets/icons/logo.svg";
-import Input from "../components/ui/Input";
 import ModeCard from "../components/ModeCard";
 
 interface Mode {
@@ -24,25 +23,15 @@ export const StartPage: React.FC = () => {
     },
     {
       id: 2,
-      title: "Тесты",
-      description:
-        "Здесь вы можете пройти различные психологические тесты. Они помогут вам лучше понять себя, свои эмоции и поведение, а также выявить возможные проблемы и найти пути их решения.",
-    },
-    {
-      id: 3,
       title: "Дневник",
       description:
         "Здесь вы можете написать свои мысли вне формата диалога, а чат их проанализирует и будет использовать информацию для дальнейшего взаимодействия с вами в формате чата.",
     },
   ];
 
-  const handleSubmit = (value: string) => {
-    console.log("Submitted:", value);
-    setTimeout(() => {
-      if (selectedMode !== null) {
-        navigate(`/home?mode=${selectedMode}`);
-      }
-    }, 2000); // Заглушка загрузки
+  const handleModeClick = (modeId: number) => {
+    setSelectedMode(modeId);
+    navigate(`/home?mode=${modeId}`);
   };
 
   return (
@@ -58,6 +47,7 @@ export const StartPage: React.FC = () => {
             <div className="text-black text-">
               Приветствуем вас в нашем психологическом джипити-чате! Мы рады, что вы решили присоединиться к нам. Здесь вы сможете получить квалифицированную помощь и поддержку по вопросам психологии и пройти различные психологические тесты, а также записать свои мысли в дневнике. 
               <br />
+              <br />
               Однако перед тем как начать консультацию, нам нужно выбрать режим для дальнейшего взаимодействия.
               <br />
               <br />
@@ -71,12 +61,11 @@ export const StartPage: React.FC = () => {
               key={mode.id}
               title={mode.title}
               description={mode.description}
-              onClick={() => setSelectedMode(mode.id)}
+              onClick={() => handleModeClick(mode.id)}
               isSelected={selectedMode === mode.id}
             />
           ))}
         </div>
-        <Input placeholder="Введите сообщение" disabled={selectedMode === null} onSubmit={handleSubmit} />
       </div>
     </div>
   );

@@ -1,26 +1,37 @@
-import React from 'react';
-
 interface SegmentBtnProps {
   title: string;
-  icon: React.ReactNode;
-  activeIcon: React.ReactNode;
+  icon?: React.ReactNode;
+  activeIcon?: React.ReactNode;
   isActive: boolean;
   onClick: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  className?: string;
 }
 
-const SegmentBtn: React.FC<SegmentBtnProps> = ({ title, icon, activeIcon, isActive, onClick }) => {
+const SegmentBtn: React.FC<SegmentBtnProps> = ({
+  title,
+  icon,
+  activeIcon,
+  isActive,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  className,
+}) => {
   return (
     <button
       className={`relative flex items-center justify-center
-        w-[149px] h-[37px]
+        h-[37px]
         rounded-full border-[1px] transition-all duration-300 ${
           isActive
             ? 'border-transparent text-transparent bg-clip-text bg-gradient-to-r from-[#6FDBB8] to-[#6EBFF9]'
             : 'border-none bg-white text-black_50'
-        }`}
+        } ${className || ""}`}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
-      {/* Градиентная рамка для активного состояния */}
       {isActive && (
         <div
           className="absolute inset-0 rounded-full pointer-events-none z-0"
@@ -33,12 +44,11 @@ const SegmentBtn: React.FC<SegmentBtnProps> = ({ title, icon, activeIcon, isActi
       )}
 
       <div className="relative z-10 flex items-center space-x-2 py-2 px-4">
-        {/* Иконка */}
-        <span className="inline-flex items-center justify-center w-5 h-5">
-          {isActive ? activeIcon : icon}
-        </span>
-
-        {/* Текст кнопки */}
+        {icon && (
+          <span className="inline-flex items-center justify-center w-5 h-5">
+            {isActive ? activeIcon || icon : icon}
+          </span>
+        )}
         <span
           className={`${
             isActive

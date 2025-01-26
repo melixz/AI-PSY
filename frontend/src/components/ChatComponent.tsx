@@ -8,7 +8,12 @@ interface Message {
   content: string;
 }
 
-const ChatComponent: React.FC = () => {
+interface ChatComponentProps {
+  onNewDialog: () => void;
+  apiUrl: string;
+}
+
+const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -22,29 +27,23 @@ const ChatComponent: React.FC = () => {
   const handleSubmit = async (value: string) => {
     if (!value.trim()) return;
 
-    // Добавляем пользовательское сообщение
     const userMessage: Message = {
       id: Date.now(),
       sender: "user",
       content: value,
     };
     setMessages((prev) => [...prev, userMessage]);
-
-    // Ставим флаг загрузки
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://185.70.196.104/chat/ask", {
+      const response = await fetch(apiUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: value }),
       });
 
       if (response.ok) {
-        // Если всё в порядке (200)
-        const data = await response.json(); // { answer: "string" }
+        const data = await response.json(); // { answer: "..." }
         const assistantResponse: Message = {
           id: Date.now() + 1,
           sender: "assistant",
@@ -52,8 +51,6 @@ const ChatComponent: React.FC = () => {
         };
         setMessages((prev) => [...prev, assistantResponse]);
       } else if (response.status === 422) {
-        // Обработка валидационной ошибки (422)
-        // Можно извлечь detail и показать пользователю
         const errorData = await response.json(); // { detail: [...] }
         const errorMessage = errorData?.detail?.[0]?.msg || "Ошибка валидации";
         const assistantResponse: Message = {
@@ -63,7 +60,6 @@ const ChatComponent: React.FC = () => {
         };
         setMessages((prev) => [...prev, assistantResponse]);
       } else {
-        // Любая другая ошибка
         const assistantResponse: Message = {
           id: Date.now() + 1,
           sender: "assistant",
@@ -72,7 +68,6 @@ const ChatComponent: React.FC = () => {
         setMessages((prev) => [...prev, assistantResponse]);
       }
     } catch (error) {
-      // Обработка сетевых ошибок, таймаута и т.д.
       console.error("Ошибка при запросе:", error);
       const assistantResponse: Message = {
         id: Date.now() + 1,
@@ -81,14 +76,13 @@ const ChatComponent: React.FC = () => {
       };
       setMessages((prev) => [...prev, assistantResponse]);
     } finally {
-      // В любом случае снимаем флаг загрузки
       setIsLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col h-full w-full bg-white">
-      {/* Поле с диалогом (прокручиваемая область) */}
+      {/* Поле с диалогом */}
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
@@ -97,6 +91,7 @@ const ChatComponent: React.FC = () => {
               message.sender === "assistant" ? "text-left" : "text-right"
             }`}
           >
+            {/* Заголовок с временем / логотипом */}
             {message.sender === "assistant" ? (
               <div className="flex items-center gap-[16px] mb-1">
                 <img src={logo} alt="logo" className="w-[30px]" />
@@ -112,25 +107,39 @@ const ChatComponent: React.FC = () => {
             <div
               className={`inline-block px-11 py-2 rounded-lg ${
                 message.sender === "assistant"
-                  ? "bg-white text-black"
-                  : "bg-white text-black_50"
+                  ? "bg-white text-black text-heading3"
+                  : "bg-white text-black_50 text-heading3"
               }`}
             >
               {message.content}
             </div>
           </div>
         ))}
+
+        {/* Сообщение ожидания */}
+        {isLoading && (
+          <div className="text-left mb-4">
+            <div className="flex items-center gap-[16px] mb-1">
+              <img src={logo} alt="logo" className="w-[30px]" />
+              <div className="text-xs text-gray-400">
+                {new Date().toLocaleTimeString()}
+              </div>
+            </div>
+            <div className="inline-block px-11 py-2 rounded-lg bg-white text-black_50 text-heading3 italic">
+              Я рядом. Мне нужно просто немного подумать.
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Панель управления */}
-      <div className="flex-none flex justify-between items-center bg-white px-4 py-2">
-        <div className="flex gap-2">
-          <button className="px-4 py-2 rounded bg-gray-200">Translate</button>
-          <button className="px-4 py-2 rounded bg-gray-200">Improve</button>
-          <button className="px-4 py-2 rounded bg-gray-200">Make longer</button>
-          <button className="px-4 py-2 rounded bg-gray-200">Make shorter</button>
-        </div>
-        <button className="px-4 py-2 rounded bg-gray-200">New dialog</button>
+      <div className="flex-none flex justify-end items-center bg-white px-4 py-2">
+        <button
+          className="px-4 py-2 rounded bg-gray-200"
+          onClick={onNewDialog}
+        >
+          New dialog
+        </button>
       </div>
 
       {/* Инпут */}

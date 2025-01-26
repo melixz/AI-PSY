@@ -19,7 +19,7 @@ const ModeCard: React.FC<ModeCardProps> = ({ title, description, onClick, isSele
 
   return (
     <div
-      className={`relative px-[16px] py-[12px] rounded-[30px] w-[388px] h-[146px] border-[1px] border-gray ${borderClasses} ${backgroundClasses}`}
+      className={`relative px-[16px] py-[12px] rounded-[30px] w-[388px] border-[1px] border-gray ${borderClasses} ${backgroundClasses}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
