@@ -52,12 +52,12 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
   const handleModelClick = (modelId: number) => {
     setSelectedModel(modelId);
     if (modelId === 1) {
-      onModelSelect(modelId);
+      onModelSelect(1);
     }
   };
-
+  
   const handleStartConversation = () => {
-    if (selectedModel !== null) {
+    if (selectedModel !== null && selectedModel !== 1) {
       onModelSelect(selectedModel);
     }
   };

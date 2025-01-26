@@ -10,9 +10,10 @@ interface Message {
 
 interface ChatComponentProps {
   onNewDialog: () => void;
+  apiUrl: string; // <- ключевой момент: URL для fetch
 }
 
-const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
+const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -35,17 +36,14 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://185.70.196.104/chat/ask", {
+      const response = await fetch(apiUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: value }),
       });
 
       if (response.ok) {
-        // Если всё в порядке (200)
-        const data = await response.json(); // { answer: "string" }
+        const data = await response.json(); // { answer: "..." }
         const assistantResponse: Message = {
           id: Date.now() + 1,
           sender: "assistant",
@@ -53,7 +51,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
         };
         setMessages((prev) => [...prev, assistantResponse]);
       } else if (response.status === 422) {
-        // Обработка валидационной ошибки (422)
         const errorData = await response.json(); // { detail: [...] }
         const errorMessage = errorData?.detail?.[0]?.msg || "Ошибка валидации";
         const assistantResponse: Message = {
@@ -63,7 +60,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
         };
         setMessages((prev) => [...prev, assistantResponse]);
       } else {
-        // Любая другая ошибка
         const assistantResponse: Message = {
           id: Date.now() + 1,
           sender: "assistant",
@@ -86,7 +82,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
 
   return (
     <div className="flex flex-col h-full w-full bg-white">
-      {/* Поле с диалогом (прокручиваемая область) */}
+      {/* Поле с диалогом */}
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
@@ -95,6 +91,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
               message.sender === "assistant" ? "text-left" : "text-right"
             }`}
           >
+            {/* Заголовок с временем / логотипом */}
             {message.sender === "assistant" ? (
               <div className="flex items-center gap-[16px] mb-1">
                 <img src={logo} alt="logo" className="w-[30px]" />
@@ -137,15 +134,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog }) => {
 
       {/* Панель управления */}
       <div className="flex-none flex justify-end items-center bg-white px-4 py-2">
-        {/* <div className="flex gap-2">
-          <button className="px-4 py-2 rounded bg-gray-200">Translate</button>
-          <button className="px-4 py-2 rounded bg-gray-200">Improve</button>
-          <button className="px-4 py-2 rounded bg-gray-200">Make longer</button>
-          <button className="px-4 py-2 rounded bg-gray-200">Make shorter</button>
-        </div> */}
         <button
           className="px-4 py-2 rounded bg-gray-200"
-          onClick={onNewDialog} // Вызов функции
+          onClick={onNewDialog}
         >
           New dialog
         </button>
