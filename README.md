@@ -14,6 +14,7 @@
 ## Технологии
 
 - **Python 3.12+**
+- **UV**: быстрый пакетный менеджер для Python.
 - **FastAPI**: REST API и обработка запросов.
 - **LangChain**: создание цепочек обработки данных для генерации контекста бесед.
 - **OpenAI API**: интеграция с языковыми моделями для диалогов.
@@ -22,7 +23,6 @@
 - **Docker**: контейнеризация проекта.
 - **Tailwind CSS**: стилизация фронтенда.
 - **React + TypeScript**: разработка пользовательского интерфейса.
-- **UV**: быстрый пакетный менеджер для Python.
 
 ---
 
@@ -129,7 +129,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
    uvicorn backend.app.api.main:app --reload
    ```
 5. Откройте API в браузере:
-   - Swagger-документация: `http://127.0.0.1:8000/docs`.
+   - Swagger-документация: `http://localhost:8000/docs`.
 
 ---
 
@@ -143,23 +143,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
    ```bash
    docker-compose down
    ```
-
----
-
-## Работа с зависимостями
-
-- **Добавление зависимостей**:
-  ```bash
-  uv add <package_name>
-  ```
-- **Удаление зависимостей**:
-  ```bash
-  uv remove <package_name>
-  ```
-- **Экспорт зависимостей в `requirements.txt`**:
-  ```bash
-  uv export -o requirements.txt
-  ```
 
 ---
 
