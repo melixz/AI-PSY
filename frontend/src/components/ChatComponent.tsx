@@ -53,7 +53,6 @@ const ChatComponent: React.FC = () => {
         setMessages((prev) => [...prev, assistantResponse]);
       } else if (response.status === 422) {
         // Обработка валидационной ошибки (422)
-        // Можно извлечь detail и показать пользователю
         const errorData = await response.json(); // { detail: [...] }
         const errorMessage = errorData?.detail?.[0]?.msg || "Ошибка валидации";
         const assistantResponse: Message = {
@@ -72,7 +71,6 @@ const ChatComponent: React.FC = () => {
         setMessages((prev) => [...prev, assistantResponse]);
       }
     } catch (error) {
-      // Обработка сетевых ошибок, таймаута и т.д.
       console.error("Ошибка при запросе:", error);
       const assistantResponse: Message = {
         id: Date.now() + 1,
@@ -81,7 +79,6 @@ const ChatComponent: React.FC = () => {
       };
       setMessages((prev) => [...prev, assistantResponse]);
     } finally {
-      // В любом случае снимаем флаг загрузки
       setIsLoading(false);
     }
   };
@@ -112,14 +109,29 @@ const ChatComponent: React.FC = () => {
             <div
               className={`inline-block px-11 py-2 rounded-lg ${
                 message.sender === "assistant"
-                  ? "bg-white text-black"
-                  : "bg-white text-black_50"
+                  ? "bg-white text-black text-heading3"
+                  : "bg-white text-black_50 text-heading3"
               }`}
             >
               {message.content}
             </div>
           </div>
         ))}
+
+        {/* Сообщение ожидания */}
+        {isLoading && (
+          <div className="text-left mb-4">
+            <div className="flex items-center gap-[16px] mb-1">
+              <img src={logo} alt="logo" className="w-[30px]" />
+              <div className="text-xs text-gray-400">
+                {new Date().toLocaleTimeString()}
+              </div>
+            </div>
+            <div className="inline-block px-11 py-2 rounded-lg bg-white text-black_50 text-heading3 italic">
+              Я рядом. Мне нужно просто немного подумать.
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Панель управления */}

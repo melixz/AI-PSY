@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Используем React Router для переходов
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import logo from "../assets/icons/logo.svg";
 import ModeCard from "../components/ModeCard";
@@ -23,12 +23,6 @@ export const StartPage: React.FC = () => {
     },
     {
       id: 2,
-      title: "Тесты",
-      description:
-        "Здесь вы можете пройти различные психологические тесты. Они помогут вам лучше понять себя, свои эмоции и поведение, а также выявить возможные проблемы и найти пути их решения.",
-    },
-    {
-      id: 3,
       title: "Дневник",
       description:
         "Здесь вы можете написать свои мысли вне формата диалога, а чат их проанализирует и будет использовать информацию для дальнейшего взаимодействия с вами в формате чата.",
@@ -52,6 +46,7 @@ export const StartPage: React.FC = () => {
             <div className="text-black text- mb-[2vh]">2.03 PM, 15 Nov</div>
             <div className="text-black text-">
               Приветствуем вас в нашем психологическом джипити-чате! Мы рады, что вы решили присоединиться к нам. Здесь вы сможете получить квалифицированную помощь и поддержку по вопросам психологии и пройти различные психологические тесты, а также записать свои мысли в дневнике. 
+              <br />
               <br />
               Однако перед тем как начать консультацию, нам нужно выбрать режим для дальнейшего взаимодействия.
               <br />
