@@ -10,7 +10,7 @@ interface Message {
 
 interface ChatComponentProps {
   onNewDialog: () => void;
-  apiUrl: string; // <- ключевой момент: URL для fetch
+  apiUrl: string;
 }
 
 const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) => {
