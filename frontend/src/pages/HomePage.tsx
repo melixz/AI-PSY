@@ -10,7 +10,6 @@ import { models } from "../helpers/models";
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
-// Сопоставляем ID -> конкретный URL чата
 const MODEL_URL_MAP: Record<number, string> = {
   2: `${BASE_API_URL}/chat/ask_cbt`,
   3: `${BASE_API_URL}/chat/ask_gestalt`,
@@ -23,31 +22,25 @@ export const HomePage: React.FC = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
-  // Считываем mode & model из query
   const initialMode = Number(params.get("mode")) || 0;
   const initialModel = Number(params.get("model")) || 0;
 
   // Состояния
+  const [activeButton, setActiveButton] = useState<"main" | "history">("main");
   const [selectedMode, setSelectedMode] = useState<number | null>(initialMode);
-  // Если model != 0, значит пользователь выбрал конкретную модель
   const [selectedModelId, setSelectedModelId] = useState<number | null>(
     initialModel > 0 ? initialModel : null
   );
-
-  // Если mode=1 (чат) и model=0 => показываем ChooseModel
   const [showChooseModel, setShowChooseModel] = useState<boolean>(
     initialMode === 1 && initialModel === 0
   );
 
-  // Когда пользователь переключает модель (на самой HomePage) или в NavBar
   const handleModelSelect = (modelId: number) => {
     if (modelId === 1) {
-      // "Тесты" => mode=2
       setSelectedMode(2);
       setSelectedModelId(null);
       setShowChooseModel(false);
     } else {
-      // иначе чат
       setSelectedMode(1);
       setSelectedModelId(modelId);
       setShowChooseModel(false);
@@ -55,12 +48,10 @@ export const HomePage: React.FC = () => {
   };
 
   const renderModeComponent = () => {
-    // 1) Если mode=1 (чат) + showChooseModel => ChooseModel
     if (selectedMode === 1 && showChooseModel) {
       return <ChooseModel onModelSelect={handleModelSelect} />;
     }
 
-    // 2) Если mode=1 (чат) + есть selectedModelId => Chat
     if (selectedMode === 1 && selectedModelId) {
       const apiUrl =
         MODEL_URL_MAP[selectedModelId] ?? `${BASE_API_URL}/chat/ask`;
@@ -69,38 +60,31 @@ export const HomePage: React.FC = () => {
         <ChatComponent
           apiUrl={apiUrl}
           onNewDialog={() => {
-            // При новом диалоге снова показываем ChooseModel
             setShowChooseModel(true);
           }}
         />
       );
     }
 
-    // 3) Если mode=2 => TestsComponent
     if (selectedMode === 2) {
       return <TestsComponent />;
     }
 
-    // 4) Если mode=3 => DiaryComponent
     if (selectedMode === 3) {
       return <DiaryComponent />;
     }
 
-    // 5) Иначе: "Выберите режим"
     return <div>Выберите режим для взаимодействия</div>;
   };
 
   return (
     <div className="flex h-screen bg-white text-text">
-      {/* SideBar: может переключить selectedMode (например, mode=3 => Diary) */}
       <SideBar
-        activeButton="main"
-        setActiveButton={() => {}}
+        activeButton={activeButton}
+        setActiveButton={setActiveButton}
         setSelectedMode={(mode) => {
           if (mode === 1) {
-            // Пользователь выбрал "Чат" в сайдбаре
             setSelectedMode(1);
-            // Если раньше не было модели, покажем ChooseModel
             setShowChooseModel(true);
           } else {
             setSelectedMode(mode);
@@ -110,14 +94,12 @@ export const HomePage: React.FC = () => {
       />
 
       <div className="flex flex-col flex-1">
-        {/* NavBar с дропдауном моделей (см. MenuDropdown) */}
         <NavBar
           models={models}
           selectedModelId={selectedModelId}
           onModelSelect={handleModelSelect}
         />
 
-        {/* Основная зона */}
         <div className="flex-1 min-h-0 p-6 overflow-auto">
           {renderModeComponent()}
         </div>
