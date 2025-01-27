@@ -20,7 +20,6 @@ vectorstore = Chroma(
     persist_directory=settings.CHROMA_PERSIST_DIR,
 )
 
-
 def load_docs_with_meta(base_path: str, category: str):
     docs = []
     base_dir = Path(base_path)
@@ -46,16 +45,12 @@ def load_docs_with_meta(base_path: str, category: str):
             docs.extend(split_docs)
     return docs
 
-
 try:
     directions_path = "app/documents/psychology/psy_directions"
     direction_docs = load_docs_with_meta(directions_path, "direction")
-
     problems_path = "app/documents/psychology/psy_problems"
     problem_docs = load_docs_with_meta(problems_path, "problem")
-
     all_docs = direction_docs + problem_docs
-
     if all_docs:
         vectorstore.add_documents(all_docs)
         print(f"✅ Успешно загружено {len(all_docs)} документов в векторное хранилище.")
@@ -66,19 +61,15 @@ except Exception as e:
 
 llm = ChatOpenAI(model_name="o1-mini", openai_api_key=settings.OPENAI_API_KEY)
 
-
 def get_filtered_retriever(direction=None, problem=None):
     flt = {}
     if direction:
         flt["direction"] = direction
     if problem:
         flt["problem"] = problem
-    if not flt:
-        return vectorstore.as_retriever(search_kwargs={"k": settings.retriever_k})
     return vectorstore.as_retriever(
-        search_kwargs={"k": settings.retriever_k, "filter": flt}
+        search_kwargs={"k": 3, "filter": flt}
     )
-
 
 def get_qa_chain_for_prompt(prompt_template, direction=None, problem=None):
     retriever = get_filtered_retriever(direction, problem)
@@ -86,8 +77,10 @@ def get_qa_chain_for_prompt(prompt_template, direction=None, problem=None):
         llm=llm,
         chain_type="stuff",
         retriever=retriever,
-        chain_type_kwargs={"prompt": prompt_template, "verbose": False},
+        chain_type_kwargs={
+            "prompt": prompt_template,
+            "verbose": False,
+        }
     )
-
 
 qa_chain_base = get_qa_chain_for_prompt(base_prompt)
