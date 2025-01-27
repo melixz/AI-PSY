@@ -82,7 +82,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) =>
 
   return (
     <div className="flex flex-col h-full w-full bg-white">
-      {/* Поле с диалогом */}
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
@@ -91,7 +90,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) =>
               message.sender === "assistant" ? "text-left" : "text-right"
             }`}
           >
-            {/* Заголовок с временем / логотипом */}
             {message.sender === "assistant" ? (
               <div className="flex items-center gap-[16px] mb-1">
                 <img src={logo} alt="logo" className="w-[30px]" />
@@ -115,8 +113,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) =>
             </div>
           </div>
         ))}
-
-        {/* Сообщение ожидания */}
         {isLoading && (
           <div className="text-left mb-4">
             <div className="flex items-center gap-[16px] mb-1">
@@ -131,8 +127,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) =>
           </div>
         )}
       </div>
-
-      {/* Панель управления */}
       <div className="flex-none flex justify-end items-center bg-white px-4 py-2">
         <button
           className="px-4 py-2 rounded bg-gray-200"
@@ -141,8 +135,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ onNewDialog, apiUrl }) =>
           New dialog
         </button>
       </div>
-
-      {/* Инпут */}
       <div className="flex-none bg-white p-4">
         <Input
           placeholder="Введите сообщение"
