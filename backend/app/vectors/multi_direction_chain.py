@@ -4,7 +4,7 @@ from langchain.schema.runnable import RunnableLambda, RunnableParallel
 from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-model = ChatOpenAI(model_name="o1-mini", openai_api_key=settings.OPENAI_API_KEY)
+model = ChatOpenAI(model_name="gpt-4o-mini", openai_api_key=settings.OPENAI_API_KEY)
 
 cbt_prompt = ChatPromptTemplate.from_messages(
     [

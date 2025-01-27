@@ -59,7 +59,7 @@ try:
 except Exception as e:
     print("❌ Ошибка загрузки документов:", e)
 
-llm = ChatOpenAI(model_name="o1-mini", openai_api_key=settings.OPENAI_API_KEY)
+llm = ChatOpenAI(model_name="gpt-4o-mini", openai_api_key=settings.OPENAI_API_KEY)
 
 def get_filtered_retriever(direction=None, problem=None):
     flt = {}

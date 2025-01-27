@@ -7,7 +7,7 @@ from app.vectors.vector import vectorstore
 from app.utils.token_counter import count_tokens
 
 llm = ChatOpenAI(
-    model_name="o1-mini", temperature=1, openai_api_key=settings.OPENAI_API_KEY
+    model_name="gpt-4o-mini", temperature=1, openai_api_key=settings.OPENAI_API_KEY
 )
 
 memory = ConversationBufferMemory(memory_key="context", return_messages=True)
