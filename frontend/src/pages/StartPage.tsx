@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import logo from "../assets/icons/logo.svg";
 import ModeCard from "../components/ModeCard";
+import { models } from "../helpers/models";
 
 interface Mode {
   id: number;
@@ -12,6 +13,7 @@ interface Mode {
 
 export const StartPage: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
+  const [selectedModelId, setSelectedModelId] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const modes: Mode[] = [
@@ -34,9 +36,18 @@ export const StartPage: React.FC = () => {
     navigate(`/home?mode=${modeId}`);
   };
 
+  const handleModelSelect = (modelId: number) => {
+    setSelectedModelId(modelId);
+    navigate(`/home?model=${modelId}`);
+  };
+
   return (
     <div className="container-1438 flex flex-col items-center h-[100vh] bg-white">
-      <NavBar />
+      <NavBar
+        models={models}
+        selectedModelId={selectedModelId}
+        onModelSelect={handleModelSelect}
+      />
       <div className="flex flex-col justify-center items-center w-[800px] h-[755px] mt-[3vh]">
         <div className="text-heading1 text-text mb-[2vh]">Psychological Chat GPT</div>
         <div className="text-subtitle1 text-black_50 mb-[3vh]">Ver 4.0 Mar 14</div>

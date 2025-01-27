@@ -2,50 +2,13 @@ import React, { useState } from "react";
 import ModeCard from "./ModeCard";
 import SegmentBtn from "./ui/SegmentBtn";
 import logo from "../assets/icons/logo.svg";
+import { models } from "../helpers/models";
 
 interface ChooseModelProps {
   onModelSelect: (modelId: number) => void;
 }
 
 const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
-  const models = [
-    {
-      id: 1,
-      title: "Тесты",
-      description:
-        "Здесь вы можете пройти различные психологические тесты. Они помогут вам лучше понять себя, свои эмоции и поведение, а также выявить возможные проблемы и найти пути их решения.",
-    },
-    {
-      id: 2,
-      title: "Когнитивно-поведенческая терапия",
-      description:
-        "Учит изменять негативные мысли и поведенческие паттерны для улучшения эмоционального состояния и решения проблем.",
-    },
-    {
-      id: 3,
-      title: "Гештальт",
-      description:
-        "Помогает осознать свои чувства, потребности и переживания здесь и сейчас, чтобы восстановить целостность личности.",
-    },
-    {
-      id: 4,
-      title: "Психоанализ",
-      description:
-        "Исследует бессознательные мотивы, детские переживания и внутренние конфликты, чтобы понять причины текущих трудностей.",
-    },
-    {
-      id: 5,
-      title: "Мульти-ответ",
-      description:
-        "Предоставляет комплексные инструменты для общей оценки внутреннего состояния и принятия решений по дальнейшей терапии.",
-    },
-    {
-      id: 6,
-      title: "Базовый GPT Сhat",
-      description: "Дефолтный чат джипити с сохранением контекста.",
-    },
-  ];
-
   const [selectedModel, setSelectedModel] = useState<number | null>(null);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 

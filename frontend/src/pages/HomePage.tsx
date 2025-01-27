@@ -6,6 +6,7 @@ import ChatComponent from "../components/ChatComponent";
 import ChooseModel from "../components/ChooseModel";
 import TestsComponent from "../components/TestsComponent";
 import DiaryComponent from "../components/DiaryComponent";
+import { models } from '../helpers/models';
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
@@ -76,7 +77,14 @@ export const HomePage: React.FC = () => {
         setSelectedMode={setSelectedMode}
       />
       <div className="flex flex-col flex-1">
-        <NavBar />
+      <NavBar
+        models={models}
+        selectedModelId={selectedModelId}
+        onModelSelect={(modelId) => {
+          setSelectedModelId(modelId);
+          setSelectedMode(1);
+        }}
+      />
         <div className="flex-1 min-h-0 p-6 overflow-auto ">
           {renderModeComponent()}
         </div>
