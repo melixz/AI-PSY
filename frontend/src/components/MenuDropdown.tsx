@@ -20,22 +20,26 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({
   onModelSelect,
   onClose,
 }) => {
+  // Локальный стейт, какой модельный id сейчас выбран (для визуального чекбокса)
   const [selectedId, setSelectedId] = useState<number | null>(selectedModelId);
 
+  // Хендлер для клика по чекбоксу
   const handleCheckboxChange = (modelId: number) => {
-    setSelectedId(modelId);
-    onModelSelect(modelId); // Переход к выбранному компоненту
-    onClose(); // Закрываем дропдаун
+    setSelectedId(modelId);     // Запомним выбранную модель
+    onModelSelect(modelId);     // Уведомим родителя о выборе
+    onClose();                  // Закроем дропдаун
   };
 
   return (
+    // Полупрозрачный фон, закрывается при клике "мимо" (onClick={onClose})
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       onClick={onClose}
     >
+      {/* Белый блок дропдауна, клик по которому не закрывает его */}
       <div
         className="bg-white p-6 rounded-lg shadow-lg w-[567px] h-[649px] relative"
-        onClick={(e) => e.stopPropagation()} // Останавливаем всплытие
+        onClick={(e) => e.stopPropagation()}
       >
         {models && models.length > 0 ? (
           models.map((model) => (
@@ -47,10 +51,13 @@ const MenuDropdown: React.FC<MenuDropdownProps> = ({
                 <p className="text-black text-heading4 mt-[8px]">
                   {model.title}
                 </p>
-                <p className="text-black_50 text-body1">{model.description}</p>
+                <p className="text-black_50 text-body1">
+                  {model.description}
+                </p>
               </div>
               <Checkbox
                 label=""
+                // Выбран, если selectedId совпадает с model.id
                 checked={selectedId === model.id}
                 onChange={() => handleCheckboxChange(model.id)}
               />
