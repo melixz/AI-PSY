@@ -11,11 +11,11 @@ import { models } from "../helpers/models";
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
 const MODEL_URL_MAP: Record<number, string> = {
-  2: `${BASE_API_URL}/chat/ask_cbt`,
-  3: `${BASE_API_URL}/chat/ask_gestalt`,
-  4: `${BASE_API_URL}/chat/ask_psychoanalysis`,
-  5: `${BASE_API_URL}/chat/ask_multi_direction`,
-  6: `${BASE_API_URL}/chat/ask`,
+  2: `${BASE_API_URL}/chat/ask`,
+  3: `${BASE_API_URL}/chat/ask_cbt`,
+  4: `${BASE_API_URL}/chat/ask_gestalt`,
+  5: `${BASE_API_URL}/chat/ask_psychoanalysis`,
+  6: `${BASE_API_URL}/chat/ask_multi_direction`,
 };
 
 export const HomePage: React.FC = () => {
