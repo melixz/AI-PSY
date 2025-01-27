@@ -30,7 +30,7 @@ const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect 
 
   return (
     <div className="relative">
-      <div className="flex items-center justify-between px-6 py-4 bg-white w-[70vw] h-[92px]">
+      <div className="flex items-center justify-between px-6 py-4  w-[70vw] h-[92px]">
         <div className="flex items-center">
           <img src={logo} alt="Logo" className="h-[48px] w-[48px] mr-4" />
           <button onClick={handleMenuToggle} className="flex items-center focus:outline-none">

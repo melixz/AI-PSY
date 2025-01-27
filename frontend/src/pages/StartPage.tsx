@@ -12,13 +12,10 @@ interface Mode {
 }
 
 export const StartPage: React.FC = () => {
-  // Локальный стейт: какой режим и модель выбраны (для подсветки)
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
   const [selectedModelId, setSelectedModelId] = useState<number | null>(null);
-
   const navigate = useNavigate();
 
-  // Два режима на выбор: id=1 ("Чат"), id=2 ("Дневник")
   const modes: Mode[] = [
     {
       id: 1,
@@ -34,7 +31,6 @@ export const StartPage: React.FC = () => {
     },
   ];
 
-  // Клик по карточке "Чат" или "Дневник"
   const handleModeClick = (modeId: number) => {
     setSelectedMode(modeId);
     // Если modeId=1 => "?mode=1"
@@ -42,23 +38,18 @@ export const StartPage: React.FC = () => {
     navigate(`/home?mode=${modeId}`);
   };
 
-  // Выбор модели (через дропдаун NavBar)
   const handleModelSelect = (modelId: number) => {
     setSelectedModelId(modelId);
 
-    // Предположим, modelId=1 => "Тесты" => /home?mode=2 (или как договорились)
-    // modelId=2..6 => Чат => /home?mode=1&model=2..6
     if (modelId === 1) {
-      // "Тесты"
       navigate(`/home?mode=2`);
     } else {
-      // Остальные модели => Чат
       navigate(`/home?mode=1&model=${modelId}`);
     }
   };
 
   return (
-    <div className="container-1438 flex flex-col items-center h-[100vh] bg-white">
+    <div className="container-1438 flex flex-col items-center h-[100vh]">
       {/* NavBar с дропдауном (модели) */}
       <NavBar
         models={models}
@@ -67,8 +58,8 @@ export const StartPage: React.FC = () => {
       />
 
       <div className="flex flex-col justify-center items-center w-[800px] h-[755px] mt-[3vh]">
-        <div className="text-heading1 text-text mb-[2vh]">
-          Psychological Chat GPT
+        <div className="text-heading1 text-transparent bg-clip-text bg-gradient-to-r from-[#6FDBB8] to-[#6EBFF9] mb-[2vh]">
+          EVE
         </div>
         <div className="text-subtitle1 text-black_50 mb-[3vh]">
           Ver 4.0 Mar 14

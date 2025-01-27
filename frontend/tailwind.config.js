@@ -33,6 +33,10 @@ export default {
         body2: ['24px', { lineHeight: 'auto', fontWeight: '500' }],
         button: ['14px', { lineHeight: 'auto', fontWeight: '500' }],
       },
+      backgroundImage: {
+        'start-page': "url('/src/assets/images/first_page.png')",
+        'home-page': "url('/src/assets/images/home_page.png')",
+      },
     },
   },
   plugins: [

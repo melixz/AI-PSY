@@ -70,7 +70,7 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onModelSelect }) => {
               </div>
 
               {/* Текст сообщения */}
-              <div className="flex flex-col bg-white p-4 rounded-lg">
+              <div className="flex flex-col p-4 rounded-lg">
                 <div className="text-heading3 ml-[36px]">
                   {`Вы выбрали ${
                     models.find((model) => model.id === selectedModel)?.title

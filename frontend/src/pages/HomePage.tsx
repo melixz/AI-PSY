@@ -78,7 +78,7 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-white text-text">
+    <div className="flex h-screen w-screen bg-white text-text">
       <SideBar
         activeButton={activeButton}
         setActiveButton={setActiveButton}
@@ -100,7 +100,7 @@ export const HomePage: React.FC = () => {
           onModelSelect={handleModelSelect}
         />
 
-        <div className="flex-1 min-h-0 p-6 overflow-auto">
+        <div className="flex-1 min-h-0 p-6 overflow-auto bg-home-page bg-cover bg-center bg-no-repeat">
           {renderModeComponent()}
         </div>
       </div>
