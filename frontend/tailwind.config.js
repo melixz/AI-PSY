@@ -51,5 +51,22 @@ export default {
         },
       });
     },
+    function ({ addComponents }) {
+      addComponents({
+        ".custom-scrollbar::-webkit-scrollbar": {
+          width: "6px",        },
+        ".custom-scrollbar::-webkit-scrollbar-track": {
+          background: "#f1f1f1", // Цвет фона трека
+          borderRadius: "8px",
+        },
+        ".custom-scrollbar::-webkit-scrollbar-thumb": {
+          background: "linear-gradient(90deg, #6FDBB8 0%, #6EBFF9 100%)", // Градиентный скролл
+          borderRadius: "8px",
+        },
+        ".custom-scrollbar::-webkit-scrollbar-thumb:hover": {
+          background: "#5ca8e6",
+        },
+      });
+    },
   ],
 }
