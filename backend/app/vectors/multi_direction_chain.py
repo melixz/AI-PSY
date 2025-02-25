@@ -4,8 +4,7 @@ from langchain.schema.runnable import RunnableLambda, RunnableParallel
 from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-
-model = ChatOpenAI(model_name="o1-mini", openai_api_key=settings.OPENAI_API_KEY)
+model = ChatOpenAI(model_name="gpt-4o-mini", openai_api_key=settings.OPENAI_API_KEY)
 
 cbt_prompt = ChatPromptTemplate.from_messages(
     [
@@ -40,13 +39,11 @@ parallel_chain = RunnableParallel(
     }
 )
 
-
 def format_multi_answer(branches_dict):
     c = branches_dict["cbt"]
     g = branches_dict["gestalt"]
     p = branches_dict["psychoanalysis"]
     return f"CBT:\n{c}\n\nГештальт:\n{g}\n\nПсихоанализ:\n{p}\n"
-
 
 multi_direction_chain = parallel_chain | RunnableLambda(
     lambda x: format_multi_answer(x["branches"])
