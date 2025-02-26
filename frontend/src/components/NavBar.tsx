@@ -5,6 +5,7 @@ import settingsIcon from "../assets/icons/settings.svg";
 import menuArrow from "../assets/icons/menu_arrow.svg";
 import MenuDropdown from "./MenuDropdown";
 import Help from "./common/Help";
+import Settings from "./common/Settings";
 
 interface Model {
   id: number;
@@ -21,6 +22,7 @@ interface NavBarProps {
 const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleMenuToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -32,7 +34,7 @@ const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect 
 
   return (
     <div className="relative">
-      <div className="flex items-center justify-between px-6 py-4  w-[70vw] h-[92px]">
+      <div className="flex items-center justify-between px-6 py-4 w-[70vw] h-[92px]">
         <div className="flex items-center">
           <img src={logo} alt="Logo" className="h-[48px] w-[48px] mr-4" />
           <button onClick={handleMenuToggle} className="flex items-center focus:outline-none">
@@ -49,7 +51,10 @@ const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect 
               <span className="mr-2">Помощь</span>
               <img src={helpIcon} alt="Help" className="h-[24px] w-[24px]" />
             </button>
-            <button className="flex items-center text-black_50 hover:text-black">
+            <button 
+              className="flex items-center text-black_50 hover:text-black"
+              onClick={() => setIsSettingsOpen(true)}
+            >
               <span className="mr-2">Настройки</span>
               <img src={settingsIcon} alt="Settings" className="h-[24px] w-[24px]" />
             </button>
@@ -71,6 +76,10 @@ const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect 
 
       {isHelpOpen && (
         <Help onClose={() => setIsHelpOpen(false)} />
+      )}
+
+      {isSettingsOpen && (
+        <Settings onClose={() => setIsSettingsOpen(false)} />
       )}
     </div>
   );

@@ -17,7 +17,7 @@ const Help: React.FC<HelpProps> = ({ onClose }) => {
         {/* Заголовок и кнопка закрытия */}
         <div className="flex justify-between items-center px-[16px] pb-[22px] pt-[10px]">
           <div className="text-lg font-heading3 text-black">Помощь</div>
-          <button onClick={onClose} className="text-black hover:text-gray-600">
+          <button onClick={onClose} className="text-black hover:text-black_50">
             <img src={closeIcon} alt="Закрыть" className="w-[12px] h-[12px]" />
           </button>
         </div>
