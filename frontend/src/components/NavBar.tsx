@@ -4,6 +4,7 @@ import helpIcon from "../assets/icons/help.svg";
 import settingsIcon from "../assets/icons/settings.svg";
 import menuArrow from "../assets/icons/menu_arrow.svg";
 import MenuDropdown from "./MenuDropdown";
+import Help from "./common/Help";
 
 interface Model {
   id: number;
@@ -19,6 +20,7 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const handleMenuToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -40,7 +42,10 @@ const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect 
 
         <div className="flex items-center space-x-24">
           <div className="flex items-center space-x-6">
-            <button className="flex items-center text-black_50 hover:text-black">
+            <button 
+              className="flex items-center text-black_50 hover:text-black" 
+              onClick={() => setIsHelpOpen(true)}
+            >
               <span className="mr-2">Помощь</span>
               <img src={helpIcon} alt="Help" className="h-[24px] w-[24px]" />
             </button>
@@ -62,6 +67,10 @@ const NavBar: React.FC<NavBarProps> = ({ models, selectedModelId, onModelSelect 
           }}
           onClose={closeDropdown}
         />
+      )}
+
+      {isHelpOpen && (
+        <Help onClose={() => setIsHelpOpen(false)} />
       )}
     </div>
   );
