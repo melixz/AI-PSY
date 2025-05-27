@@ -39,11 +39,13 @@ parallel_chain = RunnableParallel(
     }
 )
 
+
 def format_multi_answer(branches_dict):
     c = branches_dict["cbt"]
     g = branches_dict["gestalt"]
     p = branches_dict["psychoanalysis"]
     return f"CBT:\n{c}\n\nГештальт:\n{g}\n\nПсихоанализ:\n{p}\n"
+
 
 multi_direction_chain = parallel_chain | RunnableLambda(
     lambda x: format_multi_answer(x["branches"])

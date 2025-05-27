@@ -3,11 +3,13 @@ from pathlib import Path
 from langchain_openai import OpenAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI
-from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from app.core.config import settings
 from app.prompts.prompt import base_prompt
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.prompts import ChatPromptTemplate
 
 embeddings = OpenAIEmbeddings(openai_api_key=settings.OPENAI_API_KEY)
 
@@ -19,6 +21,7 @@ vectorstore = Chroma(
     embedding_function=embeddings,
     persist_directory=settings.CHROMA_PERSIST_DIR,
 )
+
 
 def load_docs_with_meta(base_path: str, category: str):
     docs = []
@@ -45,6 +48,7 @@ def load_docs_with_meta(base_path: str, category: str):
             docs.extend(split_docs)
     return docs
 
+
 try:
     directions_path = "app/documents/psychology/psy_directions"
     direction_docs = load_docs_with_meta(directions_path, "direction")
@@ -61,26 +65,26 @@ except Exception as e:
 
 llm = ChatOpenAI(model_name="gpt-4o-mini", openai_api_key=settings.OPENAI_API_KEY)
 
+
 def get_filtered_retriever(direction=None, problem=None):
     flt = {}
     if direction:
         flt["direction"] = direction
     if problem:
         flt["problem"] = problem
-    return vectorstore.as_retriever(
-        search_kwargs={"k": 3, "filter": flt}
-    )
+    return vectorstore.as_retriever(search_kwargs={"k": 3, "filter": flt})
+
 
 def get_qa_chain_for_prompt(prompt_template, direction=None, problem=None):
     retriever = get_filtered_retriever(direction, problem)
-    return RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=retriever,
-        chain_type_kwargs={
-            "prompt": prompt_template,
-            "verbose": False,
-        }
+    if not isinstance(prompt_template, ChatPromptTemplate):
+        prompt_template = ChatPromptTemplate.from_template(prompt_template.template)
+    return (
+        {"context": retriever, "question": RunnablePassthrough()}
+        | prompt_template
+        | llm
+        | StrOutputParser()
     )
+
 
 qa_chain_base = get_qa_chain_for_prompt(base_prompt)
